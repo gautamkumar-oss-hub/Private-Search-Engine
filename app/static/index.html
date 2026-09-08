@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Private Search</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <p class="eyebrow">PRIVATE SEARCH ENGINE</p>
+      <h1>Search the web.<br><span>Keep your privacy.</span></h1>
+      <p class="intro">A local-first search index with no accounts, tracking, or search-history profiling.</p>
+    </header>
+    <form id="search-form" class="search-box">
+      <input id="query" type="search" placeholder="What are you looking for?" autocomplete="off" required>
+      <button type="submit">Search</button>
+    </form>
+    <section class="crawl-panel">
+      <form id="crawl-form">
+        <input id="crawl-url" type="url" placeholder="Index a site (https://example.com)" required>
+        <input id="max-pages" type="number" min="1" max="25" value="5" aria-label="Maximum pages">
+        <button type="submit">Crawl</button>
+      </form>
+      <small id="status">Index a trusted site to create your private search corpus.</small>
+    </section>
+    <section id="results" aria-live="polite"></section>
+  </main>
+  <script>
+    const results = document.querySelector("#results");
+    const status = document.querySelector("#status");
+    const escapeHtml = (value) => value.replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+    }[char]));
+    document.querySelector("#search-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const q = document.querySelector("#query").value;
+      results.innerHTML = "<p class='muted'>Searching your private index...</p>";
+      const response = await fetch("/api/search", {
+        method: "POST", headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({q})
+      });
+      const data = await response.json();
+      results.innerHTML = data.results.length
+        ? data.results.map((item) => `<article><a href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer">${escapeHtml(item.title)}</a><p>${escapeHtml(item.snippet)}</p><small>${escapeHtml(item.url)}</small></article>`).join("")
+        : "<p class='muted'>No results. Crawl a site first, then search again.</p>";
+    });
+    document.querySelector("#crawl-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      status.textContent = "Crawling same-domain pages...";
+      const response = await fetch("/api/crawl", {
+        method: "POST", headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({url: document.querySelector("#crawl-url").value, max_pages: Number(document.querySelector("#max-pages").value)})
+      });
+      const data = await response.json();
+      status.textContent = response.ok ? `Indexed ${data.indexed} page(s). Your corpus is ready.` : data.detail;
+    });
+  </script>
+</body>
+</html>

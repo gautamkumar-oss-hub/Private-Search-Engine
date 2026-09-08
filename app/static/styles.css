@@ -1,0 +1,20 @@
+:root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #101312; color: #eef4ef; }
+* { box-sizing: border-box; }
+body { margin: 0; background: radial-gradient(circle at 20% 0%, #19382f, #101312 42%); min-height: 100vh; }
+.shell { max-width: 860px; margin: auto; padding: 11vh 24px 80px; }
+.eyebrow { color: #62e6aa; font-size: 12px; letter-spacing: .2em; font-weight: 700; }
+h1 { font-size: clamp(42px, 8vw, 78px); line-height: .98; margin: 22px 0; letter-spacing: -.06em; }
+h1 span { color: #62e6aa; }
+.intro { color: #a5b2aa; font-size: 18px; max-width: 530px; line-height: 1.6; }
+form { display: flex; gap: 10px; }
+.search-box { margin: 46px 0 14px; }
+input { width: 100%; background: #18211d; border: 1px solid #31433a; border-radius: 10px; color: inherit; padding: 16px; font: inherit; outline: none; }
+input:focus { border-color: #62e6aa; }
+button { border: 0; background: #62e6aa; color: #0d1913; padding: 0 23px; border-radius: 10px; font-weight: 800; cursor: pointer; }
+.crawl-panel { border: 1px solid #29382f; border-radius: 12px; padding: 14px; background: #141b18; }
+.crawl-panel input { padding: 11px; } .crawl-panel button { padding: 0 15px; }
+small, .muted { color: #85968c; } .crawl-panel small { display: block; margin: 11px 2px 0; }
+article { padding: 23px 2px; border-bottom: 1px solid #29382f; }
+article a { color: #70edb2; font-size: 20px; font-weight: 700; text-decoration: none; }
+article p { color: #c0cbc3; line-height: 1.55; margin: 9px 0; }
+@media (max-width: 600px) { form { flex-wrap: wrap; } button { height: 50px; width: 100%; } .crawl-panel input { width: calc(100% - 0px); } }
