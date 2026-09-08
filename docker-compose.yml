@@ -1,0 +1,19 @@
+services:
+  search:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - search-data:/app/data
+    environment:
+      - SEARCH_PRIVACY_MODE=true
+  redis:
+    image: redis:7-alpine
+    profiles: ["production"]
+  meilisearch:
+    image: getmeili/meilisearch:v1.12
+    profiles: ["production"]
+    environment:
+      MEILI_NO_ANALYTICS: "true"
+volumes:
+  search-data:
